@@ -1,0 +1,11 @@
+{
+	"name": "findMatchingBracket",
+	"version": "0.0.1",
+	"main": "index.js",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/WORMSS/findMatchingBracket.git"
+	},
+	"private": true,
+	"author": "Colin Richardson <github@wormss.net> (http://wormss.github.com/)",
+}
