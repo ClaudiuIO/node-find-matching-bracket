@@ -37,14 +37,21 @@ function findMatchingBracket(_str, _from) {
 						throw "Decreased too low";
 					}
 					if ( level == 0 ) {
-						return i + 1;
+						return i;
 					}
-					level--;
 					break;
 				}
 				if ( letter == CHAR_QUOTE_1 || letter == CHAR_QUOTE_2 ) {
 					quoteChar = letter;
 					state = STATE_STRING;
+					break;
+				}
+				if ( letter == CHAR_FORWARD_SLASH ) {
+					var regIndex = testRegex(i);
+					if ( regIndex == -1 ) {
+						break;
+					}
+					i = regIndex - 1;
 					break;
 				}
 				break;
@@ -62,6 +69,31 @@ function findMatchingBracket(_str, _from) {
 			default :
 				throw "Unknown State: " + state;
 		}
+	}
+	/*
+	 * Function is a port and small modification of FlashDevelops LookupRegex function in ASFileParser.cs code with their permission.
+	 * https://github.com/fdorg/flashdevelop/blob/development/External/Plugins/ASCompletion/Model/ASFileParser.cs
+	 * 2015/01/26
+	 */
+	function testRegex(_index) {
+		var i0 = _index - 1, c;
+		var preValid = "=(,[{;";
+		var preWhite = " \t\r\n";
+		var invalid = "\r\n";
+		while ( i0 > 0 ) {
+			c = _str.charAt(i0--);
+			if ( preValid.indexOf(c) >= 0 ) break; // ok
+			if ( preWhite.indexOf(c) >= 0 ) continue;
+			return -1;
+		}
+		i0 = _index + 1;
+		while ( i0 < len ) {
+			c = _str.charAt(i0++);
+			if ( c == CHAR_ESCAPE ) { i0++; continue; }
+			if ( c == CHAR_FORWARD_SLASH ) break; // end of regex;
+			if ( invalid.indexOf(c) >= 0 ) return -1;
+		}
+		return i0;
 	}
 };
 
