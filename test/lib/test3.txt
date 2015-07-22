@@ -1,0 +1,7 @@
+NAMESPACE.ClassName = function(data) { 
+    this.id = (!data || typeof data.id === 'undefined') ? ('AutoGenID-' + NAMESPACE.GUID.getNew()) : (data.id);
+
+    NAMESPACE.PARENT_CLASS.call(this, data);
+
+    this.init(data);
+};

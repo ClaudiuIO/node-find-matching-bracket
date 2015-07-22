@@ -1,8 +1,8 @@
 {
-	"name": "find-matching-bracket",
+	"name": "@wormss/find-matching-bracket",
 	"version": "0.0.4",
 	"author": "Colin Richardson <github@wormss.net> (http://wormss.github.com/)",
-	"main": "./index.js",
+	"main": "app/index.js",
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/WORMSS/node-find-matching-bracket.git"

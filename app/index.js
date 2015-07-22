@@ -6,7 +6,8 @@ function findMatchingBracket(_str, _from) {
 		CHAR_ESCAPE = '\\',
 		CHAR_FORWARD_SLASH = '/',
 		CHAR_QUOTE_1 = "'",
-		CHAR_QUOTE_2 = '"';
+		CHAR_QUOTE_2 = '"',
+        CHAR_STAR = "*";
 		
 	if ( _str.charAt(_from) != CHAR_OPEN ) {
 		throw "Does not start with bracket";
@@ -47,11 +48,18 @@ function findMatchingBracket(_str, _from) {
 					break;
 				}
 				if ( letter == CHAR_FORWARD_SLASH ) {
-					var regIndex = testRegex(i);
-					if ( regIndex == -1 ) {
-						break;
-					}
-					i = regIndex - 1;
+                    var commentIndex = testComment(i);
+                    if ( commentIndex == -1 ) {
+                        // not comment
+                        var regIndex = testRegex(i);
+                        if ( regIndex == -1 ) {
+                            // not regex
+                            break;
+                        }
+                        i = regIndex - 1;
+                        break;
+                    }
+                    i = commentIndex - 1;
 					break;
 				}
 				break;
@@ -95,6 +103,18 @@ function findMatchingBracket(_str, _from) {
 		}
 		return i0;
 	}
+    
+    function testComment(_index) {
+        var c = _str.charAt(_index + 1);
+        if ( c === CHAR_FORWARD_SLASH ) {
+            var match = /\n\r|\r\n|\n|\r/.exec(_str.substring(_index+1));
+            return (match) ? (_index + match.index + match[0].length) : _str.length;
+        } else if ( c === CHAR_STAR ) {
+            var match = /\*\//.exec(_str.substring(_index+1));
+            return (match) ? (_index + match.index + match[0].length) : _str.length;
+        }
+        return -1;
+    }
 };
 
 module.exports = findMatchingBracket;
