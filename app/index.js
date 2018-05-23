@@ -1,17 +1,20 @@
 function findMatchingBracket(_str, _from) {
 	_from = _from || 0;
 	
-	var CHAR_OPEN = '{',
-		CHAR_CLOSED = '}',
+	var CHAR_OPEN = ['{','[','('],
+		CHAR_CLOSED = ['}',']',')'],
+        CHAR_TYPE = -1,
 		CHAR_ESCAPE = '\\',
 		CHAR_FORWARD_SLASH = '/',
 		CHAR_QUOTE_1 = "'",
 		CHAR_QUOTE_2 = '"',
         CHAR_STAR = "*";
 		
-	if ( _str.charAt(_from) != CHAR_OPEN ) {
+	if ( CHAR_OPEN.indexOf(_str.charAt(_from)) === -1 ) {
 		throw "Does not start with bracket";
-	}
+	} else {
+      CHAR_TYPE = CHAR_OPEN.indexOf(_str.charAt(_from));
+    }
 	
 	var STATE_NORMAL = 0,
 		STATE_REGEX = 1,
@@ -25,14 +28,14 @@ function findMatchingBracket(_str, _from) {
 		var letter = _str.charAt(i);
 		switch ( state ) {
 			case STATE_NORMAL :
-				if ( letter == CHAR_ESCAPE ) {
-					throw "Invalid escape";
-				}
-				if ( letter == CHAR_OPEN ) {
+				//if ( letter == CHAR_ESCAPE ) {
+				//	throw "Invalid escaped";
+				//}
+				if ( letter == CHAR_OPEN[CHAR_TYPE] ) {
 					level++;
 					break;
 				}
-				if ( letter == CHAR_CLOSED ) {
+				if ( letter == CHAR_CLOSED[CHAR_TYPE] ) {
 					level--;
 					if ( level < 0 ) {
 						throw "Decreased too low";
